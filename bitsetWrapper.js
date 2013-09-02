@@ -1,4 +1,3 @@
-//code is obvious, restrain from reading comments.
 var bitsetWrapper = function () {
 
   function GetJavaScriptWordSize() {
@@ -201,11 +200,11 @@ var bitsetWrapper = function () {
       for (var i = 0, l = sset.length; i < l; i++) {
         //console.log(TheResultingArray,index,currentBytes)
         currentBytes = splitNumberIntoBytes(sset[i], index, BYTEBASE);
-        if (TheResultingArray.length) {
+        index = (index + BYTEBASE) % 8;
+        if (TheResultingArray.length&&index) {
           TheResultingArray[TheResultingArray.length - 1] |= currentBytes.shift();
         }
         TheResultingArray = TheResultingArray.concat(currentBytes);
-        index = (index + BYTEBASE) % 8;
       }
       //console.log(TheResultingArray)
       ui8.set(TheResultingArray, lindex);
