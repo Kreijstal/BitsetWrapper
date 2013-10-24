@@ -31,6 +31,7 @@ var bitsetWrapper = function () {
     BASE = BASE || 8;
     offset |= 0;
     number |= 0;
+if(number===0)return [0];
     var numberArray = [],
       i = Math.floor(Math.log(number) * Math.LOG2E) + 1;
     offset += (BASE - i) > 0 ? BASE - i : 0;
@@ -200,6 +201,7 @@ var bitsetWrapper = function () {
       for (var i = 0, l = sset.length; i < l; i++) {
         //console.log(TheResultingArray,index,currentBytes)
         currentBytes = splitNumberIntoBytes(sset[i], index, BYTEBASE);
+//console.log("splitNumberIntoBytes(sset[i], index, BYTEBASE)",splitNumberIntoBytes(sset[i], index, BYTEBASE));
         index = (index + BYTEBASE) % 8;
         if (TheResultingArray.length&&index) {
           TheResultingArray[TheResultingArray.length - 1] |= currentBytes.shift();
@@ -233,4 +235,4 @@ var bitsetWrapper = function () {
   }
 
   return $_Uint1Array;
-}()
+}();
