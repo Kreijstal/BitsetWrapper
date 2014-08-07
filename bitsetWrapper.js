@@ -109,36 +109,33 @@
     
     var TheJavaScriptEnignewordsize = GetJavaScriptWordSize();
       function $_Uint1Array(typedarr, gffLength) { //friends with Uint8Array, not an actual array though, length shouldn't be modified, a complete mess, but hey... it's easier.. In a way
-    
-    
+      
         //This actually attempts to support bytes with non-8 bits.
-        var buff, ui8, l;
-    
     
     
         //START
         if (typedarr.length && typedarr.constructor !== ArrayBuffer) { //Please don't enter any DOM objects you plebs
           this.length = typedarr.length;
-          ui8 = new Uint8Array(convertBinaryArrayTo8bitArray(typedarr));
+          this.ui8 = new Uint8Array(convertBinaryArrayTo8bitArray(typedarr));
         } else if (!isNaN(typedarr)) {
-          ui8 = new Uint8Array(Math.ceil(typedarr / 8));
+          this.ui8 = new Uint8Array(Math.ceil(typedarr / 8));
           this.length = typedarr;
         } else {
-          ui8 = new Uint8Array((typedarr.constructor === ArrayBuffer) ? typedarr : null); //This will throw error if any of you put objects that you shouldn't, that should teach you.
+          this.ui8 = new Uint8Array((typedarr.constructor === ArrayBuffer) ? typedarr : null); //This will throw error if any of you put objects that you shouldn't, that should teach you.
           this.length = ui8.length;
         }
         this.length = gffLength || this.length; //Hmhm that seems reasonable.
-        this.getByteArray = function () {
-          return ui8;
-        }
-        this.subarray = function (a, b) { //b is absolute.
+        this.getByteArray = this.ui8;
+        
+      }
+      $_Uint1Array.prototype.subarray = function (a, b) { //b is absolute.
           //This function doesn't modify the this object, it creates a new one.
           b = Math.ceil(b || this.length);
           var c = Math.floor(a / 8),
             d = Math.ceil(b / 8),
-            $length = (Math.ceil((b - a) / 8)), //Yeah, now it's relative.
+             $length = (Math.ceil((b - a) / 8)), //Yeah, now it's relative.
             u = new Uint8Array($length),
-            usedArr = ui8.subarray(c, d);
+            usedArr = this.ui8.subarray(c, d);
           for (var i = 0, l = u.length; i < l; i++) {
             u[i] = ByteSplice(usedArr[i], a % 8) << a % 8;
             //console.log(u[i],"FIRST",b%8);
@@ -156,7 +153,7 @@
         }
     
         //this funtion is also untested
-        this.subNumberValue = function (a, b, c) { //b is relative
+        $_Uint1Array.prototype.subNumberValue = function (a, b, c) { //b is relative
           c |= 0; //if c is undefined it defaults to 0.
           //So what is c? c is the value the offsets should be, or the value that is outside this.length
           //gets the value from a with the bit length b, will not work correctly if b is larger than The JavaScript Enigne word size
@@ -172,27 +169,27 @@
           return Math.floor(byteConcantenation.apply(this, n) / Math.pow(2, (8 - (b % 8)) % 8)); //MAGIC
         }
     
-        this.valueOf = function (i) { //replacement of arr[i], it will be harder but, meh worth it.
+        $_Uint1Array.prototype.valueOf = function (i) { //replacement of arr[i], it will be harder but, meh worth it.
           i |= 0;
           if (i < 0 || i >= this.length) {
             return undefined;
           }
-          return ByteSplice(ui8[Math.floor(i / 8)], i % 8, 1); //That was easier than I expected it
+          return ByteSplice(this.ui8[Math.floor(i / 8)], i % 8, 1); //That was easier than I expected it
         }
     
     
-        this.set = function (sset, lindex) {
+        $_Uint1Array.prototype.set = function (sset, lindex) {
           lindex |= 0;
          /*KILLING SAFE CHECKS if (sset.length + lindex > this.length) {
             throw new RangeError("Index is out of range. Why don't you try concantenating them..?")
           };*/
           var ar=convertBinaryArrayTo8bitArray(sset, lindex % 8);
-          ar[0]|= ui8[Math.floor(lindex / 8)]; 
-          ui8.set(ar, Math.floor(lindex / 8));
+          ar[0]|= this.ui8[Math.floor(lindex / 8)]; 
+          this.ui8.set(ar, Math.floor(lindex / 8));
         }
     
         //finally
-        this.byteSet = function (sset, lindex, BYTEBASE) { //OH GAWD//BYTEBASE IS 8!!! But.. what if.. what if the BYTEBASE WASN'T 8 AT ALL??
+        $_Uint1Array.prototype.byteSet = function (sset, lindex, BYTEBASE) { //OH GAWD//BYTEBASE IS 8!!! But.. what if.. what if the BYTEBASE WASN'T 8 AT ALL??
           lindex |= 0;
           BYTEBASE |= 0;
           BYTEBASE = BYTEBASE || 8; //BYTEBASE CAN'T BE ZERO!
@@ -211,12 +208,12 @@
             TheResultingArray = TheResultingArray.concat(currentBytes);
           }
           //console.log(TheResultingArray)
-          ui8.set(TheResultingArray, lindex);
+          this.ui8.set(TheResultingArray, lindex);
           return this;
         }
     
     
-        this.getSplitValueBy = function (leNumber, index) { //THE FUN BEGINS NOW
+        $_Uint1Array.prototype.getSplitValueBy = function (leNumber, index) { //THE FUN BEGINS NOW
           //I first thought of using this.subarray but then I realized that leNumber can be bigger than 8.
           leNumber |= 0;
           index |= 0;
@@ -234,7 +231,6 @@
             return arrr;
           //KILLING SAFE CHECKS }
         }
-      }
     
       return $_Uint1Array;
     }();
