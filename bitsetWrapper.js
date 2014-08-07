@@ -186,7 +186,7 @@ var TheJavaScriptEnignewordsize = GetJavaScriptWordSize();
      /*KILLING SAFE CHECKS if (sset.length + lindex > this.length) {
         throw new RangeError("Index is out of range. Why don't you try concantenating them..?")
       };*/
-      ar[0] = ui8[Math.floor(lindex / 8)] | convertBinaryArrayTo8bitArray(sset, lindex % 8);
+      ar = ui8[Math.floor(lindex / 8)] | convertBinaryArrayTo8bitArray(sset, lindex % 8);
       ui8.set(ar, Math.floor(lindex / 8));
     }
 
