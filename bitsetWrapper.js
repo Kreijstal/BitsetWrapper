@@ -185,6 +185,7 @@
           };*/
           var ar=convertBinaryArrayTo8bitArray(sset, lindex % 8);
           ar[0]|= this.ui8[Math.floor(lindex / 8)]; 
+          ar[ar.length-1]|=this.ui8[Math.floor(lindex+sset.length / 8)];
           this.ui8.set(ar, Math.floor(lindex / 8));
         }
     
