@@ -183,11 +183,10 @@ var TheJavaScriptEnignewordsize = GetJavaScriptWordSize();
 
     this.set = function (sset, lindex) {
       lindex |= 0;
-      if (sset.length + lindex > this.length) {
+     /*KILLING SAFE CHECKS if (sset.length + lindex > this.length) {
         throw new RangeError("Index is out of range. Why don't you try concantenating them..?")
-      }
-      var ar = convertBinaryArrayTo8bitArray(sset, lindex % 8);
-      ar[0] = ui8[Math.floor(lindex / 8)] | ar[0];
+      };*/
+      ar[0] = ui8[Math.floor(lindex / 8)] | convertBinaryArrayTo8bitArray(sset, lindex % 8);
       ui8.set(ar, Math.floor(lindex / 8));
     }
 
@@ -220,19 +219,19 @@ var TheJavaScriptEnignewordsize = GetJavaScriptWordSize();
       //I first thought of using this.subarray but then I realized that leNumber can be bigger than 8.
       leNumber |= 0;
       index |= 0;
-      if (leNumber > TheJavaScriptEnignewordsize) {
+      /*KILLING SAFE CHECKS if (leNumber > TheJavaScriptEnignewordsize) {
         throw new RangeError("The byte length really, really shouldn't be higuer than The Browser Word Size (Or anything close to it)"); //Unless you have a big number library or something, but who the hell needs bytes longer than The JavaScript Enigne word size bits, do you really really want to have a byte with a max value of 2^(The JavaScript Enigne word size)-1??
       } else if (leNumber < 1) { //I was tempted to put leNumber<2 but then I reasoned with myself.
         throw new Error("You entered a value less than.. 1");
-      } else {
+      } else {*/
         var RealLength = this.length - index,
           newBytesLength = Math.ceil(RealLength / leNumber),
           arrr = [];
         for (var i = 0; i < newBytesLength; i++) {
-          arrr.push(this.subNumberValue((leNumber * i) + index, leNumber));
+          arrr[i]=this.subNumberValue((leNumber * i) + index, leNumber);
         }
         return arrr;
-      }
+      //KILLING SAFE CHECKS }
     }
   }
 
