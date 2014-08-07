@@ -1,3 +1,4 @@
+//This is a bit array, useful thing.
 var bitsetWrapper = function () {
 
   function GetJavaScriptWordSize() {
@@ -18,10 +19,12 @@ var bitsetWrapper = function () {
     //BASE is not numerical base, is byte base.
     //This concantenates bits (values) and attempts to get a value from it. For example 255 and 255 would give 65535 if base 8 of course.
     //It will cast mod 2^BASE-1 to argument values
-    for (var i = arguments.length - 1, value = 0, r = 0; 0 < i; i--, r++) {
-      value += leftShiftNumber(arguments[i] % (Math.pow(2, BASE)), r * 8);
-      //console.log('I am called',arguments[i]%(Math.pow(2,BASE)),r*8);
-    }
+      var i = arguments.length - 1;
+      value = 0;
+      for ( r = 0; 0 < i; i--, r++) {
+          value += leftShiftNumber(arguments[i] % (Math.pow(2, BASE)), r * 8);
+          //console.log('I am called',arguments[i]%(Math.pow(2,BASE)),r*8);
+      }
     return value;
   }
 
@@ -104,12 +107,12 @@ if(number===0)return [0];
     return newarr;
   }
 
-
+var TheJavaScriptEnignewordsize = GetJavaScriptWordSize();
   function $_Uint1Array(typedarr, gffLength) { //friends with Uint8Array, not an actual array though, length shouldn't be modified, a complete mess, but hey... it's easier.. In a way
 
 
     //This actually attempts to support bytes with non-8 bits.
-    var buff, ui8, l, TheJavaScriptEnignewordsize = GetJavaScriptWordSize();
+    var buff, ui8, l;
 
 
 
@@ -184,8 +187,7 @@ if(number===0)return [0];
         throw new RangeError("Index is out of range. Why don't you try concantenating them..?")
       }
       var ar = convertBinaryArrayTo8bitArray(sset, lindex % 8);
-      console.log(ar, lindex, ui8[Math.floor(lindex / 8)], generateReverseOnesByLength(lindex % 8))
-      ar[0] = ui8[Math.floor(lindex / 8)] & generateReverseOnesByLength(lindex % 8) | ar[0];
+      ar[0] = ui8[Math.floor(lindex / 8)] | ar[0];
       ui8.set(ar, Math.floor(lindex / 8));
     }
 
